@@ -10,9 +10,8 @@
 
 ```
 MONGO_URI = <SRV for mongodb database>
-API_KEY = <Shopify API key>
-API_SECRET_KEY = <Shopify API secret key>
 REACT_APP_API_KEY = <Shopify API key>
+API_SECRET_KEY = <Shopify API secret key>
 SCOPES = <Permission scopes of the application> ex. read_products,write_products
 HOST_NAME = <Hostname of the server> ex. https://5df6a235ab62.ngrok.io
 API_VERSION = <Shopify API verison> ex. 2021-04
@@ -26,7 +25,7 @@ PORT = <Port in which one wants to run the node server> ex. 80
 -   Search `@@@HANDLE_TOPIC@@@` in `server/apis/hooks.js` and make appropriate changes there.
 -   Search `@@@DEFINE_HANDLERS@@@` in `server/controllers/hook.js` and make appropriate changes there.
 -   Fire `npm start` command to start the server.
--   Now all settings are done, now one can define `routes` in `server/routes` and add it into the `index.js` in root. Define apis and controllers according to your needs and develop the creative apps.
+-   Now all settings are done, you can define `routes` in `server/routes` and add it into the `index.js` in root. Define apis and controllers according to your needs and develop the creative apps.
 
 ## Authors
 

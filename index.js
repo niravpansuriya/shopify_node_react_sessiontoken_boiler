@@ -30,7 +30,7 @@ const hookControllers = require("./server/controllers/hook")
  */
 
 const {
-    API_KEY: apiKey,
+    REACT_APP_API_KEY: apiKey,
     API_SECRET_KEY: apiSecret,
     SCOPES: scopes, HOST_NAME: hostName,
     API_VERSION: apiVersion,
@@ -54,7 +54,7 @@ const buildPath = path.join(__dirname, "build");
  */
 
 ShopifyApi.Shopify.Context.initialize({
-    API_KEY: apiKey,
+    REACT_APP_API_KEY: apiKey,
     API_SECRET_KEY: apiSecret,
     SCOPES: scopes,
     HOST_NAME: hostName.replace(/https:\/\//, ""),
