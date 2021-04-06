@@ -26,7 +26,7 @@ PORT = <Port in which one wants to run the node server> ex. 80
 -   Search `@@@HANDLE_TOPIC@@@` in `server/apis/hooks.js` and make appropriate changes there.
 -   Search `@@@DEFINE_HANDLERS@@@` in `server/controllers/hook.js` and make appropriate changes there.
 -   Fire `npm start` command to start the server.
--   Now all settings are done, now one can define `routes` in `server/routes` and add it into the `index.js` in root. Define apis and controllers according to your needs and develope the creative apps.
+-   Now all settings are done, now one can define `routes` in `server/routes` and add it into the `index.js` in root. Define apis and controllers according to your needs and develop the creative apps.
 
 ## Authors
 
