@@ -8,15 +8,15 @@
 -   Fire `npm install`
 -   Create `.env` file in root of the project as following...
 
-```
-MONGO_URI = <SRV for mongodb database>
-REACT_APP_API_KEY = <Shopify API key>
-API_SECRET_KEY = <Shopify API secret key>
-SCOPES = <Permission scopes of the application> ex. read_products,write_products
-HOST_NAME = <Hostname of the server> ex. https://5df6a235ab62.ngrok.io
-API_VERSION = <Shopify API verison> ex. 2021-04
-PORT = <Port in which one wants to run the node server> ex. 80
-```
+    ```
+    MONGO_URI = <SRV for mongodb database>
+    REACT_APP_API_KEY = <Shopify API key>
+    API_SECRET_KEY = <Shopify API secret key>
+    SCOPES = <Permission scopes of the application> ex. read_products,write_products
+    HOST_NAME = <Hostname of the server> ex. https://5df6a235ab62.ngrok.io
+    API_VERSION = <Shopify API verison> ex. 2021-04
+    PORT = <Port in which one wants to run the node server> ex. 80
+    ```
 
 -   Search `###HOOK_TOPICS###` in index.js file in the root and add the webhook topics that one wants to register with application installation. Make sure to add topics from the following...
 
