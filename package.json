@@ -3,21 +3,39 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@shopify/app-bridge-react": "^1.30.0",
+    "@shopify/app-bridge-utils": "^1.30.0",
+    "@shopify/koa-shopify-auth": "^4.1.2",
+    "@shopify/koa-shopify-webhooks": "^2.6.3",
+    "@shopify/polaris": "^6.2.0",
+    "@shopify/shopify-api": "^1.2.1",
     "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
+    "axios": "^0.21.1",
+    "chalk": "^4.1.0",
     "dotenv": "^8.2.0",
     "isomorphic-fetch": "^3.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.13.1",
+    "koa-bodyparser": "^4.3.0",
+    "koa-cors": "0.0.16",
+    "koa-router": "^10.0.0",
+    "koa-send": "^5.0.1",
+    "koa-session": "^6.2.0",
+    "koa-static": "^5.0.0",
+    "mongoose": "^5.12.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
     "web-vitals": "^1.1.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "reactstart": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start": "node index.js"
   },
   "eslintConfig": {
     "extends": [

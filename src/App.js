@@ -1,24 +1,32 @@
 import logo from './logo.svg';
 import './App.css';
+import * as AuthService from "./services/authService";
+import { useState } from 'react';
+
+
 
 function App() {
+
+  const [message, setMessage] = useState("Verifing...");
+
+  const handleButton = async () => {
+    AuthService.verifyApp("/app/verify", {}).then((res) => {
+      setMessage("Application is working fine")
+    }).catch((error) => {
+      setMessage(error);
+    })
+  }
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <button onClick={() => {
+        handleButton();
+      }}>Verify</button>
+      <br /><br />
+      <p>{message}</p>
     </div>
+
   );
 }
 

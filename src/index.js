@@ -4,9 +4,34 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import { AppProvider } from "@shopify/polaris";
+import { Provider, useAppBridge } from "@shopify/app-bridge-react";
+import { authenticatedFetch } from "@shopify/app-bridge-utils";
+import "@shopify/polaris/dist/styles.css";
+
+//----------------------------------------------------------------------------------
+
+/**
+ * get query parameters
+ */
+
+const params = new URLSearchParams(window.location.search);
+window.shop = params.get("shop");
+
+
+//----------------------------------------------------------------------------------
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider
+      config={{
+        apiKey: process.env.REACT_APP_API_KEY,
+        shopOrigin: window.shop,
+        forceRedirect: true,
+      }}
+    >
+      <App />
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
