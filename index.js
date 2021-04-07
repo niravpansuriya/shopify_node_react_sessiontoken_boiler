@@ -42,7 +42,7 @@ global.ACTIVE_SHOPIFY_SHOPS = {};
 // ###HOOK_TOPICS###
 // Add topics of Shopify webhooks that one wants 
 // to register with application installation, in this array
-global.hooks = []
+global.hooks = ["APP_UNINSTALLED"]
 
 const buildPath = path.join(__dirname, "build");
 
