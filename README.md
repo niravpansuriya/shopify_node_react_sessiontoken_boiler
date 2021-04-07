@@ -26,5 +26,5 @@
 
 ## Authors
 
--   [REENA S. SANGHANI](https://www.linkedin.com/in/reena-sanghani-562007145/) (Front End) (49.99999%)
--   [NIRAV C. PANSURIYA](https://www.linkedin.com/in/nirav-pansuriya-8a4777136/) (Back End) (50.00001%)
+-   [REENA S. SANGHANI](https://www.linkedin.com/in/reena-sanghani-562007145/) (Front End) (50%)
+-   [NIRAV C. PANSURIYA](https://www.linkedin.com/in/nirav-pansuriya-8a4777136/) (Back End) (50%)
