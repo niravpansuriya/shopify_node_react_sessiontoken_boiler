@@ -54,7 +54,7 @@ const buildPath = path.join(__dirname, "build");
  */
 
 ShopifyApi.Shopify.Context.initialize({
-    REACT_APP_API_KEY: apiKey,
+    API_KEY: apiKey,
     API_SECRET_KEY: apiSecret,
     SCOPES: scopes,
     HOST_NAME: hostName.replace(/https:\/\//, ""),
