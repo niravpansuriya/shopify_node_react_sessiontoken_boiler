@@ -9,7 +9,7 @@ const { registerWebhook } = require("@shopify/koa-shopify-webhooks");
 
 //----------------------------------------------------------------------------------
 
-const Shop = require("../model/Shop")
+const Shop = require("../model/Shop");
 const { HOST_NAME: hostName, API_VERSION: apiVersion } = process.env;
 
 //----------------------------------------------------------------------------------
@@ -18,7 +18,7 @@ const { HOST_NAME: hostName, API_VERSION: apiVersion } = process.env;
  * This controller will do following things...
  * If store is new for the application, then register defined webhooks in global.hooks
  * If app is reinstalled into the store, it will register the hooks
- * If hostname is changes in the server, then it will remove the old webhooks and 
+ * If hostname is changes in the server, then it will remove the old webhooks and
  * will install the new hooks with new hostname
  * @param {String} shop store url
  * @param {String} accessToken access token for the store
@@ -27,43 +27,41 @@ const { HOST_NAME: hostName, API_VERSION: apiVersion } = process.env;
  * @returns {Promise}
  */
 const syncWebhooks = async (shop, accessToken, oldHost, isNewInstall) => {
-    return new Promise(async (resolve, reject) => {
-
+  return new Promise(async (resolve, reject) => {
+    try {
+      // if isNewInstall is true, then create all webhooks
+      if (isNewInstall) {
         try {
-            // if isNewInstall is true, then create all webhooks
-            if (isNewInstall) {
-                try {
-                    // register all webhooks defined in global.hooks
-                    await createWebHooks(shop, accessToken);
-                } catch (error) {
-                    console.log("error in createWebhooks", error);
-                }
-            }
-            else {
-                // if host name is changed
-                if (oldHost !== hostName) {
-                    // delete all webhooks
-                    try {
-                        // delete all hooks those are registred with this application
-                        await deleteAllWebhooks(shop, accessToken);
-                    } catch (error) {
-                        console.log("error in deleteAllWebhooks", error);
-                    }
-
-                    try {
-                        // register all webhooks defined in global.hooks
-                        await createWebHooks(shop, accessToken);
-                    } catch (error) {
-                        console.log("error in createWebHooks", error);
-                    }
-                }
-            }
-            return resolve();
+          // register all webhooks defined in global.hooks
+          await createWebHooks(shop, accessToken);
         } catch (error) {
-            return reject(new Error(error));
+          console.log("error in createWebhooks", error);
         }
-    })
-}
+      } else {
+        // if host name is changed
+        if (oldHost !== hostName) {
+          // delete all webhooks
+          try {
+            // delete all hooks those are registred with this application
+            await deleteAllWebhooks(shop, accessToken);
+          } catch (error) {
+            console.log("error in deleteAllWebhooks", error);
+          }
+
+          try {
+            // register all webhooks defined in global.hooks
+            await createWebHooks(shop, accessToken);
+          } catch (error) {
+            console.log("error in createWebHooks", error);
+          }
+        }
+      }
+      return resolve();
+    } catch (error) {
+      return reject(new Error(error));
+    }
+  });
+};
 
 /**
  * This controller will register all hooks those are defined in global.hooks
@@ -72,27 +70,26 @@ const syncWebhooks = async (shop, accessToken, oldHost, isNewInstall) => {
  * @returns {Promise}
  */
 const createWebHooks = async (shop, accessToken) => {
-    return new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
+    // get hook topics
+    const hooks = global.hooks;
 
-        // get hook topics
-        const hooks = global.hooks;
-
+    try {
+      for (const hook of hooks) {
         try {
-            for (const hook of hooks) {
-                try {
-                    // register hook
-                    await createWebHook(shop, accessToken, hook);
-                } catch (error) {
-                    console.log("error in createWebHook", error);
-                }
-            }
-
-            return resolve();
+          // register hook
+          await createWebHook(shop, accessToken, hook);
         } catch (error) {
-            return reject(new Error(error));
+          console.log("error in createWebHook", error);
         }
-    })
-}
+      }
+
+      return resolve();
+    } catch (error) {
+      return reject(new Error(error));
+    }
+  });
+};
 
 /**
  * This controller will return ids of registerd hooks
@@ -101,35 +98,34 @@ const createWebHooks = async (shop, accessToken) => {
  * @returns {Array} Array of ids
  */
 const getWebhookIds = async (shop, accessToken) => {
-    return new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
+    // this will store the ids of the registered hooks
+    const ids = [];
+    try {
+      // url and header for the GET webhook api call
+      const url = `https://${shop}/admin/api/${apiVersion}/webhooks.json`;
+      const headers = {
+        "X-Shopify-Access-Token": accessToken,
+      };
 
-        // this will store the ids of the registered hooks
-        const ids = [];
-        try {
+      // get registerd hooks
+      const hooks = (
+        await axios({
+          method: "GET",
+          url,
+          headers,
+        })
+      ).data.webhooks;
 
-            // url and header for the GET webhook api call
-            const url = `https://${shop}/admin/api/${apiVersion}/webhooks.json`;
-            const headers = {
-                "X-Shopify-Access-Token": accessToken
-            }
+      // get ids
+      hooks.forEach((hook) => {
+        ids.push(hook.id);
+      });
+    } catch (error) {}
 
-            // get registerd hooks
-            const hooks = (await axios({
-                method: "GET",
-                url,
-                headers
-            })).data.webhooks;
-
-            // get ids
-            hooks.forEach((hook) => {
-                ids.push(hook.id)
-            })
-        } catch (error) {
-        }
-
-        return resolve(ids);
-    })
-}
+    return resolve(ids);
+  });
+};
 
 /**
  * This controller will delete all the webhooks those are registered with the application
@@ -138,27 +134,26 @@ const getWebhookIds = async (shop, accessToken) => {
  * @returns {Promise}
  */
 const deleteAllWebhooks = async (shop, accessToken) => {
-    return new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      // get all webhook ids
+      const ids = await getWebhookIds(shop, accessToken);
+
+      // delete all webhooks
+      for (const id of ids) {
         try {
-
-            // get all webhook ids
-            const ids = await getWebhookIds(shop, accessToken);
-
-            // delete all webhooks
-            for (const id of ids) {
-                try {
-                    await deleteWebhook(shop, accessToken, id);
-                } catch (error) {
-                    console.log("error in deleteWebHook", error);
-                }
-            }
-
-            return resolve();
+          await deleteWebhook(shop, accessToken, id);
         } catch (error) {
-            return reject(new Error(error));
+          console.log("error in deleteWebHook", error);
         }
-    })
-}
+      }
+
+      return resolve();
+    } catch (error) {
+      return reject(new Error(error));
+    }
+  });
+};
 
 /**
  * This controller will delete the webhook with hook id
@@ -168,28 +163,27 @@ const deleteAllWebhooks = async (shop, accessToken) => {
  * @returns {Promise}
  */
 const deleteWebhook = async (shop, accessToken, id) => {
-    return new Promise(async (resolve, reject) => {
-        try {
+  return new Promise(async (resolve, reject) => {
+    try {
+      // url and header for DELETE hook api call
+      const url = `https://${shop}/admin/api/${apiVersion}/webhooks/${id}.json`;
+      const headers = {
+        "X-Shopify-Access-Token": accessToken,
+      };
 
-            // url and header for DELETE hook api call
-            const url = `https://${shop}/admin/api/${apiVersion}/webhooks/${id}.json`;
-            const headers = {
-                "X-Shopify-Access-Token": accessToken
-            }
+      // delete the webhook
+      await axios({
+        method: "DELETE",
+        url,
+        headers,
+      });
 
-            // delete the webhook
-            await axios({
-                method: "DELETE",
-                url,
-                headers
-            })
-
-            return resolve();
-        } catch (error) {
-            return reject(new Error(error));
-        }
-    })
-}
+      return resolve();
+    } catch (error) {
+      return reject(new Error(error));
+    }
+  });
+};
 
 /**
  * This controller will register the hook with given topic
@@ -199,25 +193,38 @@ const deleteWebhook = async (shop, accessToken, id) => {
  * @returns {Promise}
  */
 const createWebHook = async (shop, accessToken, topic) => {
-    return new Promise(async (resolve, reject) => {
-        try {
+  return new Promise(async (resolve, reject) => {
+    try {
+      // This module will register webhook in Shpify with given topic
 
-            // This module will register webhook in Shpify with given topic
-            await registerWebhook({
-                address: `${hostName}/api/hook`,
-                topic,
-                accessToken,
-                shop,
-                apiVersion,
-            });
+      // url and header for POST hook api call
+      const url = `https://${shop}/admin/api/${apiVersion}/webhooks.json`;
+      const headers = {
+        "X-Shopify-Access-Token": accessToken,
+      };
 
-            return resolve();
-        }
-        catch (error) {
-            return reject(new Error(error));
-        }
-    })
-}
+      const data = {
+        webhook: {
+          topic,
+          address: `${hostName}/api/hook`,
+          format: "json",
+        },
+      };
+
+      // post the webhook
+      await axios({
+        method: "POST",
+        url,
+        headers,
+        data,
+      });
+
+      return resolve();
+    } catch (error) {
+      return reject(new Error(error));
+    }
+  });
+};
 
 //----------------------------------------------------------------------------------
 
@@ -236,17 +243,17 @@ const createWebHook = async (shop, accessToken, topic) => {
  * @returns {Promise}
  */
 const handleShopUninstall = async (shop) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            await Shop.updateOne({ shop }, { $set: { appstatus: "uninstalled" } })
-            delete global.ACTIVE_SHOPIFY_SHOPS[shop];
-            return resolve();
-        } catch (error) {
-            return reject(new Error(error))
-        }
-    })
-}
+  return new Promise(async (resolve, reject) => {
+    try {
+      await Shop.updateOne({ shop }, { $set: { appstatus: "uninstalled" } });
+      delete global.ACTIVE_SHOPIFY_SHOPS[shop];
+      return resolve();
+    } catch (error) {
+      return reject(new Error(error));
+    }
+  });
+};
 
 //----------------------------------------------------------------------------------
 
-module.exports = { handleShopUninstall, syncWebhooks }
+module.exports = { handleShopUninstall, syncWebhooks };
