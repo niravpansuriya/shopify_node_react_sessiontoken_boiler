@@ -17,7 +17,7 @@ const { API_SECRET_KEY: apiKey } = process.env;
 /**
  * 
  * This middleware will verify the session token and store
- * All apis after this middleware, will get the shop name in ctx.state
+ * All apis after this middleware, will get the shop name and accessToken in ctx.state
  */
 const verifyUser = async (ctx, next) => {
     try {
