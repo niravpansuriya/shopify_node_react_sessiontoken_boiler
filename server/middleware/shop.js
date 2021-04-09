@@ -47,9 +47,11 @@ const verifyUser = async (ctx, next) => {
             return ctx.body = resObj;
         }
 
-        // attach the shop name in ctx.state
+        // attach the shop name and access token in ctx.state
         const shop = payLoad.dest.replace("https://", "");
+        const accessToken = await shopControllers.getAccessToken(shop);
         ctx.state.shop = shop;
+        ctx.state.accessToken = accessToken;
 
         await next();
 

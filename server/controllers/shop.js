@@ -2,6 +2,7 @@ const axios = require("axios");
 
 //----------------------------------------------------------------------------------
 
+const Shop = require("../model/Shop");
 const { API_VERSION: apiVersion } = process.env;
 
 //----------------------------------------------------------------------------------
@@ -50,7 +51,30 @@ const getShopData = async (shop, accessToken) => {
     })
 }
 
+/**
+ * 
+ * @param {String} shop shop url
+ * @returns {String} access token
+ */
+const getAccessToken = async (shop) => {
+    return new Promise((resolve, reject) => {
+        try {
+
+            if (!shop) return reject(new Error("invalid shop parameter"));
+
+            const shopData = await Shop.findOne({ shop, status: "installed" }).select(["accessToken"]);
+
+            if (!shopData) return reject(new Error("shop data not found in database"));
+
+            return resolve(shopData.accessToken);
+
+        } catch (error) {
+            return reject(error);
+        }
+    })
+}
+
 
 //----------------------------------------------------------------------------------
 
-module.exports = { getShopData, verifyToken }
+module.exports = { getShopData, verifyToken, getAccessToken }
