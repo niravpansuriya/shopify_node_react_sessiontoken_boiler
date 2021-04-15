@@ -44,8 +44,7 @@ const shopSchema = mongoose.Schema({
         required: true,
     },
     accessScope: {
-        type: String,
-        trim: true,
+        type: Array,
         required: true,
     },
     domain: {
